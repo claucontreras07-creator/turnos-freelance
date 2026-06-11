@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trabajo Freelance</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
+.topbar{background:#fff;border-bottom:0.5px solid #e0ddd5;padding:0 2rem;height:56px;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:15px;font-weight:500}
+.topbar-sub{font-size:13px;color:#888}
+.main-tabs{display:flex;gap:0;background:#fff;border-bottom:0.5px solid #e0ddd5;padding:0 2rem;position:sticky;top:56px;z-index:9}
+.main-tab{padding:12px 20px;font-size:14px;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-0.5px}
+.main-tab.active{color:#185FA5;border-bottom-color:#185FA5;font-weight:500}
+.main-tab:hover{color:#1a1a1a}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.container{max-width:900px;margin:0 auto;padding:1.5rem 1rem}
+.section{background:#fff;border:0.5px solid #e0ddd5;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.section-title{font-size:11px;font-weight:500;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metric{background:#f5f4f0;border-radius:8px;padding:.85rem 1rem}
+.metric-label{font-size:12px;color:#888;margin-bottom:4px}
+.metric-value{font-size:22px;font-weight:500}
+.c-green{color:#3B6D11}.c-amber{color:#854F0B}.c-blue{color:#185FA5}
+label{font-size:13px;color:#666;display:block;margin-bottom:4px}
+input,select{width:100%;height:36px;padding:0 10px;border:0.5px solid #ccc;border-radius:8px;background:#fff;color:#1a1a1a;font-size:14px;font-family:inherit;outline:none}
+input:focus,select:focus{border-color:#888}
+.btn{height:36px;padding:0 16px;border:0.5px solid #ccc;border-radius:8px;background:#fff;color:#1a1a1a;font-size:14px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:#f5f4f0}
+.btn-primary{background:#E6F1FB;border-color:#b5d4f4;color:#185FA5}
+.btn-primary:hover{background:#d0e8f9}
+.btn-danger{background:#FCEBEB;border-color:#f7c1c1;color:#A32D2D;height:28px;padding:0 10px;font-size:12px}
+.view-tabs{display:flex;gap:6px;margin-bottom:1rem}
+.view-tab{padding:6px 14px;border:0.5px solid #e0ddd5;border-radius:8px;font-size:13px;cursor:pointer;background:#fff;color:#888}
+.view-tab.active{border-color:#b5d4f4;color:#185FA5;background:#E6F1FB}
+.shift-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid #f0ede6;font-size:13px}
+.shift-row:last-child{border-bottom:none}
+.badge{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:500}
+.badge-enel{background:#E6F1FB;color:#185FA5}
+.badge-gasco{background:#FAEEDA;color:#854F0B}
+.badge-custom{background:#E1F5EE;color:#0F6E56}
+.boleta-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:0.5px solid #f0ede6;font-size:13px}
+.boleta-row:last-child{border-bottom:none}
+.boleta-status{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:500}
+.status-emitida{background:#EAF3DE;color:#3B6D11}
+.status-pendiente{background:#FAEEDA;color:#854F0B}
+.status-pagada{background:#E6F1FB;color:#185FA5}
+.empty{text-align:center;padding:2rem;color:#aaa;font-size:13px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+#add-campana-box{display:none}
+.group-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.group-label{font-size:13px;font-weight:500}
+.group-meta{font-size:12px;color:#888}
+@media(max-width:600px){
+  .grid4{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  .boleta-row{grid-template-columns:1fr 1fr}
+  .main-tabs{padding:0 1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <i class="ti ti-clock" style="font-size:20px;color:#185FA5"></i>
+  <span class="topbar-title">Trabajo Freelance</span>
+  <span class="topbar-sub">— $3.000/hr</span>
+</div>
+
+<div class="main-tabs">
+  <div class="main-tab active" onclick="switchTab('registro',this)"><i class="ti ti-pencil" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i>Registro</div>
+  <div class="main-tab" onclick="switchTab('historial',this)"><i class="ti ti-calendar-stats" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i>Turnos registrados</div>
+</div>
+
+<!-- PESTAÑA 1: Registro -->
+<div id="tab-registro" class="tab-content active">
+  <div class="container">
+
+    <div class="section">
+      <div class="section-title">registrar turno</div>
+      <div class="form-row">
+        <div><label>Campaña</label><select id="new-campana"></select></div>
+        <div><label>Fecha</label><input type="date" id="new-fecha"></div>
+      </div>
+      <div class="form-row">
+        <div><label>Hora inicio</label><input type="time" id="new-inicio"></div>
+        <div><label>Hora fin</label><input type="time" id="new-fin"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="agregarTurno()"><i class="ti ti-plus"></i> Registrar turno</button>
+        <button class="btn" onclick="toggleCampanaBox()"><i class="ti ti-plus"></i> Nueva campaña</button>
+      </div>
+      <div id="add-campana-box" style="margin-top:12px">
+        <div class="form-row">
+          <div><label>Nombre campaña</label><input type="text" id="nueva-campana-nombre" placeholder="Ej: Entel, Movistar..."></div>
+          <div style="display:flex;align-items:flex-end;gap:8px">
+            <button class="btn btn-primary" onclick="agregarCampana()">Agregar</button>
+            <button class="btn" onclick="cancelarCampana()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">boleta de honorarios electrónica</div>
+      <div class="form-row">
+        <div><label>Número de boleta</label><input type="text" id="b-numero" placeholder="Ej: 1492"></div>
+        <div><label>Estado boleta</label>
+          <select id="b-estado">
+            <option value="Emitida">Emitida</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Pagada">Pagada</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div><label>Campaña</label><select id="b-campana"></select></div>
+        <div><label>Monto</label><input type="number" id="b-monto" placeholder="0"></div>
+      </div>
+      <div style="margin-bottom:12px"><label>Fecha emisión</label><input type="date" id="b-fecha" style="max-width:260px"></div>
+      <button class="btn btn-primary" onclick="agregarBoleta()"><i class="ti ti-file"></i> Registrar boleta</button>
+      <div id="boletas-list" style="margin-top:1rem"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">resumen general</div>
+      <div class="grid4">
+        <div class="metric"><div class="metric-label">Total turnos</div><div class="metric-value" id="s-turnos">0</div></div>
+        <div class="metric"><div class="metric-label">Horas normales</div><div class="metric-value c-green" id="s-hnorm">0.0h</div></div>
+        <div class="metric"><div class="metric-label">Horas extras</div><div class="metric-value c-amber" id="s-hext">0h</div></div>
+        <div class="metric"><div class="metric-label">Total devengado</div><div class="metric-value c-blue" id="s-total">$0</div></div>
+      </div>
+      <div class="grid4" style="margin-top:10px">
+        <div class="metric"><div class="metric-label">Este mes — turnos</div><div class="metric-value" id="s-mturno">0 turnos</div></div>
+        <div class="metric"><div class="metric-label">Este mes — monto</div><div class="metric-value c-blue" id="s-mmonto">$0</div></div>
+        <div class="metric"><div class="metric-label">Boletas emitidas</div><div class="metric-value c-green" id="s-bemitida">0</div></div>
+        <div class="metric"><div class="metric-label">Boletas pendientes</div><div class="metric-value c-amber" id="s-bpend">0</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PESTAÑA 2: Turnos registrados -->
+<div id="tab-historial" class="tab-content">
+  <div class="container">
+
+    <div class="section">
+      <div class="section-title">turnos registrados</div>
+      <div class="view-tabs">
+        <div class="view-tab active" onclick="setView('dia',this)">Por día</div>
+        <div class="view-tab" onclick="setView('semana',this)">Por semana</div>
+        <div class="view-tab" onclick="setView('mes',this)">Por mes</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+        <div style="flex:1;min-width:140px"><label>Campaña</label>
+          <select id="filter-campana" onchange="renderTurnos()"></select>
+        </div>
+        <div style="flex:1;min-width:140px"><label>Buscar fecha</label>
+          <input type="date" id="filter-fecha" onchange="renderTurnos()">
+        </div>
+        <div style="align-self:flex-end"><button class="btn" onclick="limpiarFiltros()">Limpiar</button></div>
+      </div>
+      <div id="turnos-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const VALOR_HORA = 3000;
+const HORAS_NORMALES = 8;
+
+let turnos = JSON.parse(localStorage.getItem('ft_turnos') || '[]');
+let boletas = JSON.parse(localStorage.getItem('ft_boletas') || '[]');
+let campanas = JSON.parse(localStorage.getItem('ft_campanas') || '["ENEL","GASCO"]');
+let currentView = 'dia';
+
+function save(){
+  localStorage.setItem('ft_turnos', JSON.stringify(turnos));
+  localStorage.setItem('ft_boletas', JSON.stringify(boletas));
+  localStorage.setItem('ft_campanas', JSON.stringify(campanas));
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+  if(name==='historial') renderTurnos();
+}
+
+function calcHoras(inicio, fin){
+  let [hi,mi] = inicio.split(':').map(Number);
+  let [hf,mf] = fin.split(':').map(Number);
+  let mins = (hf*60+mf)-(hi*60+mi);
+  if(mins < 0) mins += 24*60;
+  return mins/60;
+}
+
+function fmtHoras(h){ return h.toFixed(1)+'h'; }
+function fmtMoney(v){ return '$'+Math.round(v).toLocaleString('es-CL'); }
+
+function formatFecha(str){
+  let [y,m,d] = str.split('-');
+  return d+'/'+m+'/'+y;
+}
+function formatMes(str){
+  let meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  let [y,m] = str.split('-');
+  return meses[parseInt(m)-1]+' '+y;
+}
+function getWeek(dateStr){
+  let d = new Date(dateStr+'T12:00:00');
+  let day = d.getDay()||7;
+  d.setDate(d.getDate()+4-day);
+  let year = d.getFullYear();
+  let startYear = new Date(year,0,1);
+  let wn = Math.ceil((((d-startYear)/86400000)+1)/7);
+  return year+'-W'+String(wn).padStart(2,'0');
+}
+
+function syncCampanas(){
+  let opts = campanas.map(c=>`<option value="${c}">${c}</option>`).join('');
+  document.getElementById('new-campana').innerHTML = opts;
+  document.getElementById('b-campana').innerHTML = opts;
+  document.getElementById('filter-campana').innerHTML = '<option value="">Todas</option>'+opts;
+}
+
+function agregarTurno(){
+  let campana = document.getElementById('new-campana').value;
+  let fecha = document.getElementById('new-fecha').value;
+  let inicio = document.getElementById('new-inicio').value;
+  let fin = document.getElementById('new-fin').value;
+  if(!fecha||!inicio||!fin){alert('Completa fecha, hora inicio y hora fin.');return;}
+  let horas = calcHoras(inicio,fin);
+  if(horas<=0){alert('La hora de fin debe ser posterior a la de inicio.');return;}
+  let hnorm = Math.min(horas,HORAS_NORMALES);
+  let hext = Math.max(0,horas-HORAS_NORMALES);
+  let monto = hnorm*VALOR_HORA + hext*VALOR_HORA*1.5;
+  turnos.push({id:Date.now(),campana,fecha,inicio,fin,horas,hnorm,hext,monto});
+  save(); renderSummary();
+  document.getElementById('new-inicio').value='';
+  document.getElementById('new-fin').value='';
+}
+
+function eliminarTurno(id){
+  if(!confirm('¿Eliminar este turno?')) return;
+  turnos = turnos.filter(t=>t.id!==id);
+  save(); renderTurnos(); renderSummary();
+}
+
+function setView(v,el){
+  currentView=v;
+  document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderTurnos();
+}
+
+function limpiarFiltros(){
+  document.getElementById('filter-campana').value='';
+  document.getElementById('filter-fecha').value='';
+  renderTurnos();
+}
+
+function renderTurnos(){
+  let fc = document.getElementById('filter-campana').value;
+  let ff = document.getElementById('filter-fecha').value;
+  let filtered = turnos.filter(t=>{
+    if(fc && t.campana!==fc) return false;
+    if(ff && currentView==='dia' && t.fecha!==ff) return false;
+    if(ff && currentView==='semana' && getWeek(t.fecha)!==getWeek(ff)) return false;
+    if(ff && currentView==='mes' && t.fecha.slice(0,7)!==ff.slice(0,7)) return false;
+    return true;
+  });
+  let groups={};
+  filtered.forEach(t=>{
+    let key = currentView==='dia'?t.fecha:currentView==='semana'?getWeek(t.fecha):t.fecha.slice(0,7);
+    if(!groups[key]) groups[key]=[];
+    groups[key].push(t);
+  });
+  let keys = Object.keys(groups).sort().reverse();
+  let html='';
+  if(keys.length===0) html='<div class="empty"><i class="ti ti-calendar" style="font-size:24px;display:block;margin:0 auto 8px"></i>Sin turnos registrados</div>';
+  keys.forEach(key=>{
+    let items=groups[key];
+    let totalH=items.reduce((a,b)=>a+b.horas,0);
+    let totalM=items.reduce((a,b)=>a+b.monto,0);
+    let label=currentView==='dia'?formatFecha(key):currentView==='semana'?'Semana '+key.split('-W')[1]+' / '+key.split('-W')[0]:formatMes(key);
+    html+=`<div style="margin-bottom:14px">
+      <div class="group-header"><span class="group-label">${label}</span><span class="group-meta">${fmtHoras(totalH)} — ${fmtMoney(totalM)}</span></div>`;
+    items.forEach(t=>{
+      let bc=t.campana==='ENEL'?'badge-enel':t.campana==='GASCO'?'badge-gasco':'badge-custom';
+      html+=`<div class="shift-row">
+        <span class="badge ${bc}">${t.campana}</span>
+        <span style="color:#888">${t.inicio} – ${t.fin}</span>
+        <span style="flex:1">${fmtHoras(t.horas)}</span>
+        ${t.hext>0?`<span style="font-size:11px;color:#854F0B">+${fmtHoras(t.hext)} ext.</span>`:''}
+        <span style="font-weight:500">${fmtMoney(t.monto)}</span>
+        <button class="btn btn-danger" onclick="eliminarTurno(${t.id})"><i class="ti ti-trash"></i></button>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('turnos-list').innerHTML=html;
+}
+
+function renderSummary(){
+  let now=new Date();
+  let mesActual=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  let tTotal=turnos.length;
+  let hNorm=turnos.reduce((a,b)=>a+b.hnorm,0);
+  let hExt=turnos.reduce((a,b)=>a+b.hext,0);
+  let tMonto=turnos.reduce((a,b)=>a+b.monto,0);
+  let mTurnos=turnos.filter(t=>t.fecha.slice(0,7)===mesActual);
+  let mMonto=mTurnos.reduce((a,b)=>a+b.monto,0);
+  let bEmitidas=boletas.filter(b=>b.estado==='Emitida').length;
+  let bPend=boletas.filter(b=>b.estado==='Pendiente').length;
+  document.getElementById('s-turnos').textContent=tTotal;
+  document.getElementById('s-hnorm').textContent=fmtHoras(hNorm);
+  document.getElementById('s-hext').textContent=fmtHoras(hExt);
+  document.getElementById('s-total').textContent=fmtMoney(tMonto);
+  document.getElementById('s-mturno').textContent=mTurnos.length+' turnos';
+  document.getElementById('s-mmonto').textContent=fmtMoney(mMonto);
+  document.getElementById('s-bemitida').textContent=bEmitidas;
+  document.getElementById('s-bpend').textContent=bPend;
+}
+
+function agregarBoleta(){
+  let num=document.getElementById('b-numero').value.trim();
+  let estado=document.getElementById('b-estado').value;
+  let campana=document.getElementById('b-campana').value;
+  let monto=parseFloat(document.getElementById('b-monto').value)||0;
+  let fecha=document.getElementById('b-fecha').value;
+  if(!num){alert('Ingresa el número de boleta.');return;}
+  boletas.push({id:Date.now(),num,estado,campana,monto,fecha});
+  save(); renderBoletas(); renderSummary();
+  document.getElementById('b-numero').value='';
+  document.getElementById('b-monto').value='';
+}
+
+function eliminarBoleta(id){
+  if(!confirm('¿Eliminar esta boleta?')) return;
+  boletas=boletas.filter(b=>b.id!==id);
+  save(); renderBoletas(); renderSummary();
+}
+
+function renderBoletas(){
+  if(boletas.length===0){document.getElementById('boletas-list').innerHTML='<div class="empty">Sin boletas registradas</div>';return;}
+  let html='';
+  boletas.slice().reverse().forEach(b=>{
+    let bc=b.campana==='ENEL'?'badge-enel':b.campana==='GASCO'?'badge-gasco':'badge-custom';
+    let sc=b.estado==='Emitida'?'status-emitida':b.estado==='Pendiente'?'status-pendiente':'status-pagada';
+    html+=`<div class="boleta-row">
+      <span class="badge ${bc}">${b.campana}</span>
+      <span>Boleta N° ${b.num}${b.fecha?' — '+formatFecha(b.fecha):''}</span>
+      <span style="font-weight:500">${fmtMoney(b.monto)}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="boleta-status ${sc}">${b.estado}</span>
+        <button class="btn btn-danger" onclick="eliminarBoleta(${b.id})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('boletas-list').innerHTML=html;
+}
+
+function toggleCampanaBox(){
+  let box=document.getElementById('add-campana-box');
+  box.style.display=box.style.display==='block'?'none':'block';
+}
+function cancelarCampana(){
+  document.getElementById('add-campana-box').style.display='none';
+  document.getElementById('nueva-campana-nombre').value='';
+}
+function agregarCampana(){
+  let nombre=document.getElementById('nueva-campana-nombre').value.trim().toUpperCase();
+  if(!nombre){alert('Ingresa un nombre.');return;}
+  if(campanas.includes(nombre)){alert('Campaña ya existe.');return;}
+  campanas.push(nombre);
+  save(); syncCampanas(); cancelarCampana();
+  renderSummary();
+}
+
+let today=new Date().toISOString().slice(0,10);
+document.getElementById('new-fecha').value=today;
+document.getElementById('b-fecha').value=today;
+
+syncCampanas();
+renderBoletas();
+renderSummary();
+</script>
+</body>
+</html>
