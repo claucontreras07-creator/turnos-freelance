@@ -85,9 +85,21 @@ input:focus,select:focus{border-color:#888}
         <div><label>Campaña</label><select id="new-campana"></select></div>
         <div><label>Fecha</label><input type="date" id="new-fecha"></div>
       </div>
-      <div class="form-row">
-        <div><label>Hora inicio</label><input type="time" id="new-inicio"></div>
-        <div><label>Hora fin</label><input type="time" id="new-fin"></div>
+      <div style="display:flex;gap:6px;margin-bottom:10px">
+        <button class="btn" id="modo-horario-btn" onclick="setModoHoras('horario')" style="font-size:12px;height:30px;padding:0 12px;background:#E6F1FB;border-color:#b5d4f4;color:#185FA5">Hora inicio/fin</button>
+        <button class="btn" id="modo-manual-btn" onclick="setModoHoras('manual')" style="font-size:12px;height:30px;padding:0 12px">Ingresar horas directamente</button>
+      </div>
+      <div id="modo-horario">
+        <div class="form-row">
+          <div><label>Hora inicio</label><input type="time" id="new-inicio"></div>
+          <div><label>Hora fin</label><input type="time" id="new-fin"></div>
+        </div>
+      </div>
+      <div id="modo-manual" style="display:none">
+        <div class="form-row">
+          <div><label>Horas trabajadas</label><input type="number" id="new-horas-manual" min="0.5" max="24" step="0.5" placeholder="Ej: 7.5"></div>
+          <div style="display:flex;align-items:flex-end"><span style="font-size:12px;color:#888;padding-bottom:10px">Las horas se cuentan desde las 00:00</span></div>
+        </div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="agregarTurno()"><i class="ti ti-plus"></i> Registrar turno</button>
@@ -230,21 +242,43 @@ function syncCampanas(){
   document.getElementById('filter-campana').innerHTML = '<option value="">Todas</option>'+opts;
 }
 
+let modoHoras = 'horario';
+function setModoHoras(modo){
+  modoHoras = modo;
+  document.getElementById('modo-horario').style.display = modo==='horario'?'block':'none';
+  document.getElementById('modo-manual').style.display = modo==='manual'?'block':'none';
+  document.getElementById('modo-horario-btn').style.background = modo==='horario'?'#E6F1FB':'#fff';
+  document.getElementById('modo-horario-btn').style.borderColor = modo==='horario'?'#b5d4f4':'#ccc';
+  document.getElementById('modo-horario-btn').style.color = modo==='horario'?'#185FA5':'#1a1a1a';
+  document.getElementById('modo-manual-btn').style.background = modo==='manual'?'#E6F1FB':'#fff';
+  document.getElementById('modo-manual-btn').style.borderColor = modo==='manual'?'#b5d4f4':'#ccc';
+  document.getElementById('modo-manual-btn').style.color = modo==='manual'?'#185FA5':'#1a1a1a';
+}
+
 function agregarTurno(){
   let campana = document.getElementById('new-campana').value;
   let fecha = document.getElementById('new-fecha').value;
-  let inicio = document.getElementById('new-inicio').value;
-  let fin = document.getElementById('new-fin').value;
-  if(!fecha||!inicio||!fin){alert('Completa fecha, hora inicio y hora fin.');return;}
-  let horas = calcHoras(inicio,fin);
-  if(horas<=0){alert('La hora de fin debe ser posterior a la de inicio.');return;}
+  let horas, inicio, fin;
+  if(modoHoras === 'horario'){
+    inicio = document.getElementById('new-inicio').value;
+    fin = document.getElementById('new-fin').value;
+    if(!fecha||!inicio||!fin){alert('Completa fecha, hora inicio y hora fin.');return;}
+    horas = calcHoras(inicio,fin);
+    if(horas<=0){alert('La hora de fin debe ser posterior a la de inicio.');return;}
+    document.getElementById('new-inicio').value='';
+    document.getElementById('new-fin').value='';
+  } else {
+    let horasVal = parseFloat(document.getElementById('new-horas-manual').value);
+    if(!fecha||!horasVal||horasVal<=0){alert('Completa la fecha y las horas trabajadas.');return;}
+    horas = horasVal;
+    inicio = '—'; fin = '—';
+    document.getElementById('new-horas-manual').value='';
+  }
   let hnorm = Math.min(horas,HORAS_NORMALES);
   let hext = Math.max(0,horas-HORAS_NORMALES);
   let monto = hnorm*VALOR_HORA + hext*VALOR_HORA*1.5;
   turnos.push({id:Date.now(),campana,fecha,inicio,fin,horas,hnorm,hext,monto});
   save(); renderSummary();
-  document.getElementById('new-inicio').value='';
-  document.getElementById('new-fin').value='';
 }
 
 function eliminarTurno(id){
@@ -296,7 +330,7 @@ function renderTurnos(){
       let bc=t.campana==='ENEL'?'badge-enel':t.campana==='GASCO'?'badge-gasco':'badge-custom';
       html+=`<div class="shift-row">
         <span class="badge ${bc}">${t.campana}</span>
-        <span style="color:#888">${t.inicio} – ${t.fin}</span>
+        <span style="color:#888">${t.inicio==='—'?t.horas.toFixed(1)+'h ingresadas':t.inicio+' – '+t.fin}</span>
         <span style="flex:1">${fmtHoras(t.horas)}</span>
         ${t.hext>0?`<span style="font-size:11px;color:#854F0B">+${fmtHoras(t.hext)} ext.</span>`:''}
         <span style="font-weight:500">${fmtMoney(t.monto)}</span>
