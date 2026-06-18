@@ -67,7 +67,21 @@ input:focus,select:focus{border-color:#888}
 <div class="topbar">
   <i class="ti ti-clock" style="font-size:20px;color:#185FA5"></i>
   <span class="topbar-title">Trabajo Freelance</span>
-  <span class="topbar-sub">— $3.000/hr</span>
+  <span class="topbar-sub" id="topbar-valor">— $3.000/hr</span>
+  <button class="btn" onclick="abrirConfigValor()" style="margin-left:auto;height:30px;padding:0 12px;font-size:12px"><i class="ti ti-settings" style="font-size:14px"></i> Valor hora</button>
+</div>
+
+<!-- Modal configuración valor hora -->
+<div id="modal-valor" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.25);align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:1.5rem;width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.12)">
+    <div style="font-size:14px;font-weight:500;margin-bottom:1rem">Valor de la hora</div>
+    <label style="font-size:13px;color:#666;display:block;margin-bottom:4px">Precio por hora ($)</label>
+    <input type="number" id="input-valor-hora" min="1" step="100" placeholder="Ej: 3000" style="width:100%;height:36px;padding:0 10px;border:0.5px solid #ccc;border-radius:8px;font-size:14px;font-family:inherit;outline:none;margin-bottom:1rem">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="cerrarConfigValor()">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarValorHora()">Guardar</button>
+    </div>
+  </div>
 </div>
 
 <div class="main-tabs">
@@ -183,7 +197,7 @@ input:focus,select:focus{border-color:#888}
 </div>
 
 <script>
-const VALOR_HORA = 3000;
+let VALOR_HORA = parseInt(localStorage.getItem('ft_valor_hora') || '3000');
 const HORAS_NORMALES = 8;
 
 let turnos = JSON.parse(localStorage.getItem('ft_turnos') || '[]');
@@ -195,6 +209,27 @@ function save(){
   localStorage.setItem('ft_turnos', JSON.stringify(turnos));
   localStorage.setItem('ft_boletas', JSON.stringify(boletas));
   localStorage.setItem('ft_campanas', JSON.stringify(campanas));
+  localStorage.setItem('ft_valor_hora', String(VALOR_HORA));
+}
+
+function actualizarTopbarValor(){
+  document.getElementById('topbar-valor').textContent = '— '+fmtMoney(VALOR_HORA)+'/hr';
+}
+function abrirConfigValor(){
+  document.getElementById('input-valor-hora').value = VALOR_HORA;
+  document.getElementById('modal-valor').style.display = 'flex';
+}
+function cerrarConfigValor(){
+  document.getElementById('modal-valor').style.display = 'none';
+}
+function guardarValorHora(){
+  let v = parseInt(document.getElementById('input-valor-hora').value);
+  if(!v||v<1){alert('Ingresa un valor válido.');return;}
+  VALOR_HORA = v;
+  localStorage.setItem('ft_valor_hora', String(VALOR_HORA));
+  actualizarTopbarValor();
+  cerrarConfigValor();
+  renderSummary();
 }
 
 function switchTab(name, el){
@@ -427,6 +462,7 @@ document.getElementById('b-fecha').value=today;
 syncCampanas();
 renderBoletas();
 renderSummary();
+actualizarTopbarValor();
 </script>
 </body>
 </html>
